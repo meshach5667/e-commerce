@@ -18,12 +18,30 @@ def create_product(payload: ProductCreate):
      )
     products[product_id] = new_product
     return {'message': 'Product created successfully', 'data': new_product}
+@product_router.get("/products/")
+async def read_products():
+    return {"products": list(products.values())}
 
-@product_router.get('/{id}', status_code=200)
-def list_products():
-    products[id]
-    return {'message': 'Success', 'data': list(products.values())}
 
+@product_router.get("/{product_id}", response_model=Product)
+def get_single_product(product_id: int,  
+                       qty: Optional[int]=None,  
+                       available: bool=True):
+    if product_id not in products:
+        raise HTTPException(status_code=404, detail="Product not found")
+    else:
+        product = products[product_id]
+        
+        # Checking if the fields are optional or not
+        if qty is None and available is False:
+            return {"id": product.id, "name": product.name, "price": product}["id"]+ \
+                f"- {f'Quantity: {qty}' if qty is not None else ''}"\
+                f"+ Available: {('Yes' if available else 'No')}"
+        elif qty is not None:
+            product.quantity_available -= qty
+            return product
+        else:
+            return product
 
 @product_router.put("/update-product-info/{product_id}")
 def edit_product_info(product_id: int, payload: Product):
