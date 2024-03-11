@@ -56,6 +56,7 @@ This API provides basic functionalities for managing orders in an e-commerce sys
 - **GET /orders/**: List all existing orders.
 - **GET /orders/{order_id}**: Retrieve a specific order by ID.
 - **PUT /orders/{order_id}/checkout**: Checkout an order.
+- **DELETE/products/{id}/delete**: Delete a product
 
 ## Contributing
 
