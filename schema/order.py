@@ -2,6 +2,13 @@ from pydantic import BaseModel
 
 from schema.product import Product
 
+
+
+class OrderPayload(BaseModel):
+    customer_id: int
+    product_id: int
+    quantity: int
+
 class Order(BaseModel):
     id: int
     customer_id: int

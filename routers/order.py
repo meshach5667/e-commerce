@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from typing import Dict, Optional
 from schema.order import Order
+from schema.order import OrderPayload 
+
 
 order_router = APIRouter()
 orders: Dict[int, Order] = {}
@@ -18,11 +20,13 @@ def checkout_order(order_id: int) -> Optional[Order]:
 get_order_dependency = Depends(get_order)
 
 @order_router.post('/', status_code=201)
-def create_order(payload: dict):
+def create_order(payload: OrderPayload):
     order_id = len(orders) + 1
     new_order = Order(
         id=order_id,
-        **payload,
+        customer_id=payload.customer_id,
+        product_id=payload.product_id,
+        quantity=payload.quantity,
         status="pending"
     )
     orders[order_id] = new_order

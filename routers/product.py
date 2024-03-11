@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends,status
 from typing import Dict, Optional
 
 from schema.product import Product, ProductCreate
@@ -19,8 +19,9 @@ def create_product(payload: ProductCreate):
     products[product_id] = new_product
     return {'message': 'Product created successfully', 'data': new_product}
 
-@product_router.get('/', status_code=200)
+@product_router.get('/{id}', status_code=200)
 def list_products():
+    products[id]
     return {'message': 'Success', 'data': list(products.values())}
 
 
@@ -33,9 +34,12 @@ def edit_product_info(product_id: int, payload: Product):
         return {"message": "The information of  the product was updated", "data": products[product_id]}
     
         
+@product_router.delete("/delete-product/{product_id}")
+def delete(id:int):
+    if id  not in products:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail=f"There is no product with the id {id}")
+    del  products[id]
+    return{"message":"The product has been deleted successfully"}
 
-# @product_router.get('/{product_id}', status_code=200)
-# def get_product_by_id(product_id: int, product: Product = Depends(get_product_dependency)):
-#     if not product:
-#         raise HTTPException(status_code=404, detail="Product not found")
-#     return {'message': 'Success', 'data': product}
+   
+
